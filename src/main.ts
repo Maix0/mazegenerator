@@ -1,8 +1,8 @@
 let canvas: HTMLCanvasElement | HTMLElement = document.getElementById("mainCavas") !;
 let context = ( < HTMLCanvasElement > canvas).getContext('2d') !;
+let options = document.getElementById("optionsBuilder") !;
 const timeStep = 0
-
-
+const generateSetTimeout = true
 class Cell {
     filled: boolean
     dirs ? : {
@@ -90,19 +90,58 @@ class Maze {
 
 
 
-function main() {
-    let maze = new Maze(100, 100) // y*9 + 9 = max
+function generateMaze(size: number) {
+    let maze = new Maze(size, size) // y*9 + 9 = max
+    let rExit = (<HTMLInputElement>options.querySelector("#randomExits")).checked
     maze.canvasSettings( < HTMLCanvasElement > canvas)
     setTimeout(nextStep, 0, maze, [{
         x: Math.floor(Math.random() * maze.width),
-        y: Math.floor(Math.random() * maze.height)  
-    }], 1)
+        y: Math.floor(Math.random() * maze.height)
+    }], 1,rExit)
 }
 
 function nextStep(maze: Maze, stack: {
     x: number,
     y: number
-} [], nCellVisited: number) {
+} [], nCellVisited: number, rExit: boolean) {
+    function generateExit(): {
+        pos: {
+            x: number,
+            y: number
+        },
+        dir: "north" | "south" | "west" | "east"
+    } {
+        let x = 0,
+            y = 0;
+        let dir: "north" | "south" | "west" | "east";
+        if (Math.random() < 0.5) { // ON THE TOP OR BOTTOM
+            if (Math.random() < 0.5) { //TOP
+                x = Math.floor(Math.random() * maze.width)
+                dir = "north"
+            } else { //BOTTOM
+                x = Math.floor(Math.random() * maze.width)
+                y = maze.height - 1
+                dir = "south"
+            }
+        } else { // ON THE SIDES
+            if (Math.random() < 0.5) { //LEFT
+                y = Math.floor(Math.random() * maze.height)
+                dir = "west"
+            } else { //RIGHT
+                y = Math.floor(Math.random() * maze.height)
+                x = maze.width - 1
+                dir = "east"
+            }
+        }
+        return {
+            pos: {
+                y: y,
+                x: x
+            },
+            dir: dir
+        }
+
+    }
     maze.draw(context)
     if (nCellVisited < maze.width * maze.height) {
         let cell = maze.cells[stack[stack.length - 1].y * maze.height + stack[stack.length - 1].x]
@@ -110,7 +149,7 @@ function nextStep(maze: Maze, stack: {
             north: cell.y > 0 ? maze.cells[(cell.y - 1) * maze.height + cell.x] : null,
             south: cell.y < maze.height + 1 ? maze.cells[(cell.y + 1) * maze.height + cell.x] : null,
             west: cell.x > 0 ? maze.cells[cell.y * maze.height + (cell.x - 1)] : null,
-            east: cell.x < maze.width -1  ? maze.cells[cell.y * maze.height + (cell.x + 1)] : null,
+            east: cell.x < maze.width - 1 ? maze.cells[cell.y * maze.height + (cell.x + 1)] : null,
         }
         if (neighbour.north || neighbour.south || neighbour.west || neighbour.east) {
             Object.keys(neighbour).forEach(dir => {
@@ -155,18 +194,31 @@ function nextStep(maze: Maze, stack: {
             } else {
                 stack.pop()
             }
-
         }
-
-
-        setTimeout(nextStep, timeStep, maze, stack, nCellVisited)
-    }
-    else {
-        maze.cells[0].setDir("west",true)
-        maze.cells[maze.cells.length - 1].setDir("east",true)
+        setTimeout(nextStep, timeStep, maze, stack, nCellVisited, rExit)
+    } else {
+        if (rExit) {
+            let start = generateExit()
+            let end = generateExit()
+            while (start.pos === end.pos) {
+                end = generateExit()
+            }
+            maze.cells[start.pos.y * maze.height + start.pos.x].setDir(start.dir, true)
+            maze.cells[end.pos.y * maze.height + end.pos.x].setDir(end.dir, true)
+        } else {
+            maze.cells[0].setDir("west", true)
+            maze.cells[maze.cells.length -1 ].setDir("east", true)
+        }
         maze.draw(context)
     }
 }
 
+function handleOptions() {
+    let size = Number(( < HTMLInputElement > options.querySelector("#inpSize")).value)
+    if (!size || size < 1 || Number.isNaN(size)) {
+        size = 10
+    }
+    generateMaze(size)
+}
 
-main()
+( < HTMLButtonElement > options.querySelector("#buttonGenerate")).addEventListener("click", handleOptions)

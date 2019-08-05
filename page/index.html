@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .colorViewer{
+            width: 10px;
+            height: 10px;
+            background-color: black;
+        }
+        body {
+            background-color: #181A1B;
+            color: #FFFFFF
+        }
+
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
+    </style>
+
+    </style>
+</head>
+
+<body>
+    <div id="optionsBuilder">
+        <input type="number" id="inpSize" placeholder="Maze Size">
+        <button id="buttonGenerate">Generate</button>
+        <input type="checkbox" id="randomExits" value="true"> Random Exits
+        <input type="number" id="cellSize" placeholder="Cell Size (in pixel)">
+        <button id="buttonDownload">Download If finished</button>
+        <span>Load from file <input type="file" id="buttonUpload"></span>
+        <span id="colorpicker">
+            <div class="dropdown">
+                <button class="dropbtn">Cell Background</button>
+                <div class="dropdown-content">
+                    <a href="#" class="active" data-value="normal">Cell Background</a>
+                    <a href="#" data-value="start">Start Cell Background</a>
+                    <a href="#" data-value="end">End Cell Background</a>
+                    <a href="#" data-value="wall">Wall Color</a>
+                </div>
+            </div><span>
+            <input class="colorViewer" disabled>
+            <input type="number" class="red" min="0" max="255">
+            <input type="number" class="green" min="0" max="255">
+            <input type="number" class="blue" min="0" max="255">
+            <button class="buttonColor">Update color</button>
+        </span>
+    </div>
+    <canvas id="mainCavas"></canvas>
+    <script src="../dist/main.js"></script>
+</body>
+
+</html>

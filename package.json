@@ -1,0 +1,22 @@
+{
+  "name": "mazegenerator",
+  "version": "1.0.0",
+  "description": "maze generator",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Maix0/mazegenerator.git"
+  },
+  "author": "Maix",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Maix0/mazegenerator/issues"
+  },
+  "homepage": "https://github.com/Maix0/mazegenerator#readme",
+  "devDependencies": {
+    "@types/node": "^12.6.9"
+  }
+}
